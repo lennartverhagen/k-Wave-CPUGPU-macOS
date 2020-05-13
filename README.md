@@ -50,7 +50,7 @@ The c++ CPU optimised code supporting OpenMP has been modified from the linux di
 ### compile k-Wave c++ source code
 * go to the source code dir `cd kspaceFirstOrder-OMP`
 * compile: `make -j`
-* test the compiled binary: ` ./kspaceFirstOrder-OMP --help`
+* test the compiled binary: `./kspaceFirstOrder-OMP --help`
 * copy the kspaceFirstOrder-OMP executable to the `binaries` folder of the main k-Wave toolbox dir
 * to remove the compilation and binary executable from the source code dir, run `make clean`
 
