@@ -25,15 +25,15 @@ with shared memory. 2D simulations can be carried out in both normal and
 axisymmetric coordinate systems.
 
 
-## macOS compatibility
+## CPU/GPU macOS compatibility
+The c++ CPU optimised code supporting OpenMP has been modified from the linux distribution to be compatible with macOS. The original linux/windows k-Wave CPU/GPU source code can be found [here](http://www.k-wave.org/download.php).The c++ code that have been modified have been identified simply by running `grep -r linux .`. To look up the exact modification, run `grep -r macOS .` and `grep -r APPLE .`. Further modifications have been make in the Makefile. All modifications have only been tested on macOS Catalina 10.15 for the GNU compiler with the FFTW library. Currently, only the CPU OMP source code has been modified. The GPU CUDA code requires NVIDIA graphics cards which are only available on macOS through external cards (eGPU) and some benevolent hacking. For NVIDIA eGPU on macOS, follow this [video](https://youtu.be/JjL_50ZNaKY) and these [instructions](https://theunlockr.com/how-to-use-nvidia-cards-with-your-mac-egpu/) making use of [these scripts](https://egpu.io/forums/mac-setup/wip-nvidia-egpu-support-for-high-sierra/paged/1/).
 
-The c++ CPU optimised code supporting OpenMP has been modified from the linux distribution to be compatible with macOS. The c++ code to modify has been identified simply by running `grep -r linux .`. Modification can be found by running `grep -r macOS .` and `grep -r APPLE .`. Further modifications have been make in the Makefile. These modifications have only been tested on macOS Catalina 10.15 for the GNU compiler with the FFTW library. Currently, only the CPU OMP source code has been modified. The GPU CUDA code requires NVIDIA graphics cards which are only available on macOS through external cards (eGPU) and some benevolent hacking. For NVIDIA eGPU on macOS, follow this [video](https://youtu.be/JjL_50ZNaKY) and these [instructions](https://theunlockr.com/how-to-use-nvidia-cards-with-your-mac-egpu/) making use of [these scripts](https://egpu.io/forums/mac-setup/wip-nvidia-egpu-support-for-high-sierra/paged/1/).
 
-
-## macOS installation
+## CPU/GPU macOS installation
 ### basics
-* download the k-Wave CPU/GPU [source code](http://www.k-wave.org/download.php)
-* read the `Readme.md` (but keep in mind this is for linux distributions)
+* clone or download the macOS compatible k-Wave CPU/GPU source code from [github](https://github.com/lennartverhagen/k-Wave-CPUGPU-macOS)
+* follow the `README.md` in the root of the `k-Wave-CPUGPU-macOS` git repository
+* for more details check out the `Readme.md` files in the sub-folders, but keep in mind these are tailored for linux distributions
 * we will make use of **homebrew** to install the required packages and libraries on macOS. Check out [https://brew.sh](https://brew.sh) for instructions
 * below we will provide summary instructions, with more elaborate and alternative instructions further down
 * all these instructions should be run on the command-line terminal
