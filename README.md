@@ -54,6 +54,16 @@ The c++ CPU optimised code supporting OpenMP has been modified from the linux di
 * copy the kspaceFirstOrder-OMP executable to the `binaries` folder of the main k-Wave toolbox dir
 * to remove the compilation and binary executable from the source code dir, run `make clean`
 
+### work-in-progress: compiling acousticFieldPropagator-OMP
+**NOTE: acousticFieldPropagator-OMP is not operational yet on macOS**
+cmake seems to have some trouble finding the path to hdf5 and fftw. Strange, as both are installed properly. Minor changes have been made to the CMakeLists.txt and below is some example code to force the use of the GNU compilers, rather than the macOS clang default.
+```
+mkdir acousticFieldPropagator-OMP-build
+cd acousticFieldPropagator-OMP-build
+cmake ../acousticFieldPropagator-OMP -DCMAKE_C_COMPILER=/usr/local/bin/gcc-9 -DCMAKE_CXX_COMPILER=/usr/local/bin/g++-9 -DCMAKE_BUILD_TYPE=Release -DUSE_FFTW=on
+make -j
+```
+
 ### details: GNU compilers
 * in macOS gcc and g++ link to the clang compiler. Run `gcc --version` to confirm. To use the *true* gcc compilers, you need to explicitly specify the version of the gcc compiler in the Makefile, as `gcc-9`.
 * run `which gcc-9` to confirm the installation location

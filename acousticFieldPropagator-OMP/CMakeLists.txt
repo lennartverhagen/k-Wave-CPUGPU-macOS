@@ -63,6 +63,8 @@ if (STATIC_LINKING)
 else ()
     set(HDF5_SEARCH_TYPE "shared")
 endif ()
+# - point to HDF5 path on macOS
+set(HDF5_ROOT "/usr/local/opt/hdf5")
 # - package search
 find_package(HDF5 COMPONENTS "C" ${HDF5_SEARCH_TYPE} NO_MODULE QUIET)
 if (HDF5_FOUND)
@@ -98,6 +100,8 @@ endif ()
 # Fast Fourier Transform
 #
 if (USE_FFTW)
+    # - point to FFTW path on macOS
+    set(FFTW3f_ROOT "/usr/local/opt/fftw")
     # - decide if OpenMP implementation should be used
     if (NOT WIN32)
         set(FFTW3f_USE_OPENMP "on")
