@@ -461,6 +461,13 @@
 #ifndef HDF5_FILE_H
 #define HDF5_FILE_H
 
+/// macOS compatibility
+#ifdef __APPLE__
+  #include <string>
+  #include <sstream>
+  #include <iostream>
+#endif
+
 #include <hdf5.h>
 #include <hdf5_hl.h>
 #include <map>

@@ -675,8 +675,9 @@ std::string Parameters::getProcessorName() const
 
   auto cpuid = [](unsigned int funcId, unsigned int subFuncId, ProcessorRegistry& regs)
   {
-    // Linux build
-    #ifdef __linux__
+    // Linux or macOS build
+    // #ifdef __linux__
+    #if defined(__linux__) || defined (__APPLE__)
       asm volatile
         ("cpuid"
           : "=a" (regs[0]),

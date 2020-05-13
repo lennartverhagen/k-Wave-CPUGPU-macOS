@@ -2,31 +2,34 @@
 # * @file      Makefile
 # * @author    Jiri Jaros
 # *            Faculty of Information Technology
-# *            Brno University of Technology 
+# *            Brno University of Technology
 # * @email     jarosjir@fit.vutbr.cz
 # * @comments  Linux makefile for Release version on Ubuntu 18.04
-# * 
+# *
 # * @tool      kspaceFirstOrder 2.17
-# * @created   04 September 2017, 12:50 
+# * @created   04 September 2017, 12:50
 # * @lastModif 26 February  2020, 16:20
 # *
-# * @copyright Copyright (C) 2017 - 2020 SC\@FIT Research Group, 
+# * @copyright Copyright (C) 2017 - 2020 SC\@FIT Research Group,
 # *            Brno University of Technology, Brno, CZ.
 # *
-# * This file is part of the C++ extension of the k-Wave Toolbox 
-# * (http://www.k-wave.org). 
+# * This file has been modified to support macOS by Lennart Verhagen,
+# * Donders Institute, Radboud University, Nijmegen, the Netherlands
 # *
-# * This file is part of the k-Wave. k-Wave is free software: you can 
-# * redistribute it and/or modify it under the terms of the GNU Lesser General 
-# * Public License as published by the Free Software Foundation, either version 
+# * This file is part of the C++ extension of the k-Wave Toolbox
+# * (http://www.k-wave.org).
+# *
+# * This file is part of the k-Wave. k-Wave is free software: you can
+# * redistribute it and/or modify it under the terms of the GNU Lesser General
+# * Public License as published by the Free Software Foundation, either version
 # * 3 of the License, or (at your option) any later version.
 # *
-# * k-Wave is distributed in the hope that it will be useful, but WITHOUT ANY 
-# * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
+# * k-Wave is distributed in the hope that it will be useful, but WITHOUT ANY
+# * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 # * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for
 # * more details.
 # *
-# * You should have received a copy of the GNU Lesser General Public License 
+# * You should have received a copy of the GNU Lesser General Public License
 # * along with k-Wave.
 # * If not, see [http://www.gnu.org/licenses/](http://www.gnu.org/licenses/).
 # */
@@ -75,23 +78,38 @@
 COMPILER = GNU
 #COMPILER = Intel
 
-# Static lining is default
- LINKING = STATIC
-#LINKING = DYNAMIC
+# Static linking is default on linux, dynamic on macOS
+LINKING = DYNAMIC
+#LINKING = STATIC
 
 # Set up paths: If using modules, the paths are set up automatically,
 #               otherwise, set paths manually
-MKL_DIR  = $(EBROOTMKL)
-FFT_DIR  = $(EBROOTFFTW)
-HDF5_DIR = $(EBROOTHDF5)
-ZLIB_DIR = $(EBROOTZLIB)
-SZIP_DIR = $(EBROOTSZIP)
 
-# Select CPU architecture (what instruction set to be used). 
+# hard-coded default paths
+MKL_DIR  = /usr/local
+#FFT_DIR  = /usr/local/fftw
+#HDF5_DIR = /usr/local/hdf5
+#ZLIB_DIR = /usr/local/zlib
+#SZIP_DIR = /usr/local/szip
+
+# homebrew installations
+FFT_DIR  = $(shell brew --prefix fftw)
+HDF5_DIR = $(shell brew --prefix hdf5)
+ZLIB_DIR = $(shell brew --prefix zlib)
+SZIP_DIR = $(shell brew --prefix szip)
+
+# Using EasyBuild / lmod module manager
+#MKL_DIR  = $(EBROOTMKL)
+#FFT_DIR  = $(EBROOTFFTW)
+#HDF5_DIR = $(EBROOTHDF5)
+#ZLIB_DIR = $(EBROOTZLIB)
+#SZIP_DIR = $(EBROOTSZIP)
+
+# Select CPU architecture (what instruction set to be used).
 # The libraries such as FFTW, HDF5 and MKL are to be compiled under the same
-# architecture, e.g., if you want to use AVX in k-Wave, compile FFTW with 
+# architecture, e.g., if you want to use AVX in k-Wave, compile FFTW with
 # --enable-avx
-# The native architecture will compile and optimize the code for the underlying 
+# The native architecture will compile and optimize the code for the underlying
 # processor.
 # Fat binary, available only for Intel, includes all AVX, AVX2 and AVX512 sets.
 
@@ -106,18 +124,21 @@ CPU_ARCH = native
 GIT_HASH       = -D__KWAVE_GIT_HASH__=\"0ba023063e3f29685e1e346f56883378d961f9f1\"
 
 # Replace tabs by spaces
-.RECIPEPREFIX += 
+.RECIPEPREFIX +=
 
 ################################ GNU g++ + FFTW ################################
 ifeq ($(COMPILER), GNU)
   # Compiler name
-  CXX       = g++
+  #CXX			= g++
+  CXX       = g++-9
 
   # C++ standard
   CPP_STD   = -std=c++11
 
   # Enable OpenMP
   OPENMP    = -fopenmp
+	# when using clang
+  #OPENMP 		= -Xpreprocessor -fopenmp -lomp
 
   # Set CPU architecture
   # Sandy Bridge, Ivy Bridge
@@ -129,11 +150,11 @@ ifeq ($(COMPILER), GNU)
     CPU_FLAGS = -m64 -mavx2
 
   # Skylake-X, Ice Lake, Cannon Lake
-  else ifeq ($(CPU_ARCH), AVX512) 
+  else ifeq ($(CPU_ARCH), AVX512)
     CPU_FLAGS = -m64 -mavx512f
 
-  # Defautl is native - the max performance for this CPU
-  else 
+  # Default is native - the max performance for this CPU
+  else
     CPU_FLAGS = -m64 -march=native -mtune=native
   endif
 
@@ -141,9 +162,9 @@ ifeq ($(COMPILER), GNU)
   OPT       = -O3 -ffast-math -fassociative-math
 
   # Debug flags
-  DEBUG     = 
+  DEBUG     =
   # Profile flags
-  PROFILE   = 
+  PROFILE   =
   # C++ warning flags
   WARNING   = -Wall
 
@@ -212,11 +233,11 @@ ifeq ($(COMPILER), Intel)
     CPU_FLAGS = -m64 -xCORE-AVX512
 
   # AMD-AVX, Intel's AVX, AVX2 and AVX-512
-  else ifeq ($(CPU_ARCH), FAT_BIN) 
+  else ifeq ($(CPU_ARCH), FAT_BIN)
     CPU_FLAGS = -m64 -mavx -axCORE-AVX2,CORE-AVX512
 
   # Defautl is native - the max performance for this CPU
-  else 
+  else
     CPU_FLAGS = -m64 -xhost
   endif
 
@@ -224,9 +245,9 @@ ifeq ($(COMPILER), Intel)
   OPT       = -Ofast -ipo
 
   # Debug flags
-  DEBUG     = 
+  DEBUG     =
   # Profile flags
-  PROFILE   = 
+  PROFILE   =
   # C++ warning flags
   WARNING   = -Wall
 
@@ -299,13 +320,13 @@ all: $(TARGET)
 
 # Link target
 $(TARGET): $(DEPENDENCIES)
-  $(CXX) $(LDFLAGS) $(DEPENDENCIES) $(LDLIBS) -o $@
+	$(CXX) $(LDFLAGS) $(DEPENDENCIES) $(LDLIBS) -o $@
 
 # Compile units
 %.o: %.cpp
-  $(CXX) $(CXXFLAGS) -o $@ -c $<
+	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
 # Clean repository
 .PHONY: clean
 clean:
-  rm -f $(DEPENDENCIES) $(TARGET)
+	rm -f $(DEPENDENCIES) $(TARGET)

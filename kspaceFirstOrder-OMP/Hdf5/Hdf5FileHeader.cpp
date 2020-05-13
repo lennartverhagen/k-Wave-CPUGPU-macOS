@@ -33,8 +33,9 @@
 #include <stdexcept>
 #include <ctime>
 
-// Linux build
-#ifdef __linux__
+// Linux or macOS build
+// #ifdef __linux__
+#if defined(__linux__) || defined (__APPLE__)
   #include <unistd.h>
 #endif
 
@@ -415,8 +416,9 @@ void Hdf5FileHeader::setHostInfo()
 {
   char hostName[256];
 
-  //Linux build
-  #ifdef __linux__
+  // Linux or macOS build
+  // #ifdef __linux__
+  #if defined(__linux__) || defined (__APPLE__)
     gethostname(hostName, 256);
   #endif
 

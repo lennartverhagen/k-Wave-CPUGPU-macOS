@@ -32,8 +32,9 @@
 #ifndef OUTPUT_MESSAGES_H
 #define OUTPUT_MESSAGES_H
 
-// Linux build
-#ifdef __linux__
+// Linux or macOS build
+// #ifdef __linux__
+#if defined(__linux__) || defined (__APPLE__)
   #include <Logger/OutputMessagesLinux.h>
 #endif
 
