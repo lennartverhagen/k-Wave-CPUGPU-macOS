@@ -1,0 +1,21 @@
+#include <Version/Version.h>
+
+// Numeric version information
+const unsigned short kVersionMajor{@PROJECT_VERSION_MAJOR@};
+const unsigned short kVersionMinor{@PROJECT_VERSION_MINOR@};
+const unsigned short kVersionPatch{@PROJECT_VERSION_PATCH@};
+
+// Revision string and working directory information
+const char* kRevisionString{"@PROJECT_GIT_REVISION@"};
+const char* kRepositoryStatus{"@PROJECT_GIT_STATUS@"};
+
+// Build date and time
+const char* kBuildDateTime{"@PROJECT_BUILD_DATE_TIME@"};
+
+// C++ compiler identification
+const char* kCompilerIdentifier{"@CMAKE_CXX_COMPILER_ID@ @CMAKE_CXX_COMPILER_VERSION@"};
+
+#ifdef KWAVE_VERSION
+/// kWave release version number
+const char* kKWaveVersion{"@KWAVE_VERSION@"};
+#endif
